@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Home | Stress Detection System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .nav-link {
+      position: relative;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -5px;
+      left: 0;
+      background-color: #4f46e5;
+      transition: width 0.3s ease;
+    }
+    
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    
+    .hero-card {
+      transform: translateY(50px);
+      opacity: 0;
+      transition: all 0.6s ease-out;
+    }
+    
+    .hero-card.visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    .feature-card {
+      transform: scale(0.95);
+      transition: all 0.4s ease;
+    }
+    
+    .feature-card:hover {
+      transform: scale(1);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    .floating {
+      animation: floating 6s ease-in-out infinite;
+    }
+    
+    @keyframes floating {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    .gradient-text {
+      background: linear-gradient(90deg, #4f46e5, #10b981);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .user-greeting {
+      background: linear-gradient(90deg, #4f46e5, #10b981);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body class="relative">
+  <!-- Navigation -->
+  <nav class="bg-gray-900 to-indigo-800 text-white shadow-lg fixed w-full z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        <div class="flex-shrink-0 flex items-center">
+          <i class="fas fa-heartbeat text-3xl mr-3 text-pink-400"></i>
+          <span class="text-2xl font-bold gradient-text">Stress<span class="text-white">Detection</span></span>
+        </div>
+        <div class="hidden md:block">
+          <div class="ml-10 flex items-baseline space-x-8">
+            <a href="{% url 'home' %}" class="nav-link px-3 py-2 text-sm font-medium bg-indigo-900 rounded-md">Home</a>
+            <a href="{% url 'profile' %}" class="nav-link px-3 py-2 text-sm font-medium hover:text-indigo-200">Profile</a>
+             <a href="{% url 'logout' %}" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+                    Logout <i class="fas fa-sign-out-alt ml-1"></i>
+              </a>
+          </div>
+        </div>
+        <div class="md:hidden">
+          <button class="mobile-menu-button p-2 rounded-md text-white hover:text-indigo-200 focus:outline-none">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <div class="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-indigo-50 to-white">
+    <div class="max-w-4xl mx-auto text-center hero-card">
+      <h1 class="text-4xl md:text-5xl font-bold mb-6">Welcome, <span class="user-greeting">{{ user.username }}</span></h1>
+      <p class="text-lg md:text-xl text-gray-600 mb-10">
+        Monitor and manage your stress levels with our advanced detection system. Get real-time insights to improve your well-being.
+      </p>
+      <a href="{% url 'predict' %}" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-indigo-800 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition duration-300 pulse">
+        <i class="fas fa-heartbeat mr-3"></i> Check Stress Level
+      </a>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl font-bold text-gray-800 mb-4">How It Works</h2>
+      <p class="text-gray-600 max-w-2xl mx-auto">
+        Our system uses advanced biometric analysis to provide accurate stress level assessments.
+      </p>
+    </div>
+    
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="feature-card bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition duration-300">
+        <div class="w-16 h-16 bg-indigo-100 rounded-full mb-6 mx-auto flex items-center justify-center">
+          <i class="fas fa-user-circle text-indigo-600 text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-semibold text-center mb-3">Personal Profile</h3>
+        <p class="text-gray-600 text-center">
+          Your unique stress patterns are analyzed based on your personal profile and history.
+        </p>
+      </div>
+      
+      <div class="feature-card bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition duration-300">
+        <div class="w-16 h-16 bg-blue-100 rounded-full mb-6 mx-auto flex items-center justify-center">
+          <i class="fas fa-chart-line text-blue-600 text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-semibold text-center mb-3">Real-Time Analysis</h3>
+        <p class="text-gray-600 text-center">
+          Our algorithms process your biometric data in real-time for immediate feedback.
+        </p>
+      </div>
+      
+      <div class="feature-card bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition duration-300">
+        <div class="w-16 h-16 bg-green-100 rounded-full mb-6 mx-auto flex items-center justify-center">
+          <i class="fas fa-lightbulb text-green-600 text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-semibold text-center mb-3">Personalized Tips</h3>
+        <p class="text-gray-600 text-center">
+          Receive customized recommendations to manage and reduce your stress levels.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="bg-gray-50 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div class="md:flex">
+          <div class="md:w-1/2 p-10 bg-gradient-to-br from-indigo-50 to-blue-50 flex items-center">
+            <div>
+              <h2 class="text-3xl font-bold text-gray-800 mb-4">Your Stress History</h2>
+              <p class="text-gray-600 mb-6">
+                Track your progress over time with detailed charts and historical data.
+              </p>
+              <a href="{% url 'profile' %}" class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition duration-300">
+                View Profile <i class="fas fa-arrow-right ml-2"></i>
+              </a>
+            </div>
+          </div>
+          <div class="md:w-1/2 p-10">
+            <div class="flex items-center mb-8">
+              <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
+                <i class="fas fa-calendar-week text-indigo-600"></i>
+              </div>
+              <div>
+                <h3 class="font-semibold text-gray-800">Last Check</h3>
+                <p class="text-gray-500 text-sm">2 days ago</p>
+              </div>
+            </div>
+            <div class="flex items-center mb-8">
+              <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                <i class="fas fa-chart-pie text-blue-600"></i>
+              </div>
+              <div>
+                <h3 class="font-semibold text-gray-800">Average Stress</h3>
+                <p class="text-gray-500 text-sm">Moderate (6.2/10)</p>
+              </div>
+            </div>
+            <div class="flex items-center">
+              <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                <i class="fa fa-line-chart text-green-600"></i>
+              </div>
+              <div>
+                <h3 class="font-semibold text-gray-800">Trend</h3>
+                <p class="text-gray-500 text-sm">Improving (↓12% from last week)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-4 gap-8">
+        <div>
+          <div class="flex items-center mb-4">
+            <i class="fas fa-heartbeat text-3xl mr-3 text-pink-400"></i>
+            <span class="text-2xl font-bold">Stress<span class="text-indigo-400">Detection</span></span>
+          </div>
+          <p class="text-gray-400 text-sm">
+            Helping you understand and manage stress for better well-being.
+          </p>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+          <ul class="space-y-2">
+            <li><a href="{% url 'home' %}" class="text-gray-400 hover:text-white transition duration-300">Home</a></li>
+            <li><a href="{% url 'profile' %}" class="text-gray-400 hover:text-white transition duration-300">Profile</a></li>
+            <li><a href="{% url 'logout' %}" class="text-gray-400 hover:text-white transition duration-300">Logout</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Contact</h3>
+          <ul class="space-y-2 text-gray-400">
+            <li class="flex items-center"><i class="fas fa-map-marker-alt mr-2 text-indigo-400"></i> 123 Wellness Center, Health City</li>
+            <li class="flex items-center"><i class="fas fa-phone mr-2 text-indigo-400"></i> (555) 123-4567</li>
+            <li class="flex items-center"><i class="fas fa-envelope mr-2 text-indigo-400"></i> support@stressdetection.com</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Follow Us</h3>
+          <div class="flex space-x-4">
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-indigo-600 transition duration-300">
+              <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-indigo-600 transition duration-300">
+              <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-indigo-600 transition duration-300">
+              <i class="fab fa-github"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
+        &copy; 2025 Stress Detection System. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Animation on scroll
+    const heroCard = document.querySelector('.hero-card');
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, {
+      threshold: 0.1
+    });
+    
+    observer.observe(heroCard);
+    
+    // Mobile menu toggle (placeholder - would need actual implementation)
+    const mobileMenuButton = document.querySelector('.mobile-menu-button');
+    mobileMenuButton.addEventListener('click', () => {
+      alert('Mobile menu would open here in a full implementation');
+    });
+    
+    // Add animation to feature cards when they come into view
+    const featureCards = document.querySelectorAll('.feature-card');
+    const featureObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'scale(1)';
+          }, index * 100);
+        }
+      });
+    }, {
+      threshold: 0.1
+    });
+    
+    featureCards.forEach(card => {
+      card.style.opacity = '0';
+      card.style.transform = 'scale(0.95)';
+      card.style.transition = 'all 0.4s ease';
+      featureObserver.observe(card);
+    });
+  </script>
+</body>
+</html>

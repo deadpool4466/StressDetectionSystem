@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register | Stress Detection System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #4f46e5 0%, #10b981 100%);
+      min-height: 100vh;
+    }
+    
+    .register-card {
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.6s ease-out;
+    }
+    
+    .register-card.visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    .gradient-text {
+      background: linear-gradient(90deg, #ffffff, #e0e7ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .nav-link {
+      position: relative;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -5px;
+      left: 0;
+      background-color: #4f46e5;
+      transition: width 0.3s ease;
+    }
+    
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    
+    .input-field {
+      transition: all 0.3s ease;
+    }
+    
+    .input-field:focus {
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+    }
+    
+    .register-btn {
+      transition: all 0.3s ease;
+    }
+    
+    .register-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    
+    .error-message {
+      animation: shake 0.5s;
+    }
+    
+    .password-strength {
+      height: 5px;
+      margin-top: 5px;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+  </style>
+</head>
+<body class="relative">
+  <!-- Navigation -->
+  <nav class="bg-gray-900 text-white shadow-lg fixed w-full z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        <div class="flex-shrink-0 flex items-center">
+          <i class="fas fa-heartbeat text-3xl mr-3 text-pink-400"></i>
+          <span class="text-2xl font-bold gradient-text">Stress<span class="text-white">Detection</span></span>
+        </div>
+        <div class="hidden md:block">
+          <div class="ml-10 flex items-baseline space-x-8">
+            <a href="{% url 'index'%}" class="nav-link px-3 py-2 text-sm font-medium hover:text-indigo-200">Home</a>
+            <a href="{% url 'signup'%}" class="nav-link px-3 py-2 text-sm font-medium hover:text-indigo-200">Sign Up</a>
+            <a href="{% url 'aboutus'%}" class="nav-link px-3 py-2 text-sm font-medium hover:text-indigo-200">About Us</a>
+          </div>
+        </div>
+        <div class="md:hidden">
+          <button class="mobile-menu-button p-2 rounded-md text-white hover:text-indigo-200 focus:outline-none">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Registration Content -->
+  <div class="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md mx-auto register-card bg-white rounded-xl shadow-2xl overflow-hidden">
+      <!-- Registration Header -->
+      <div class="bg-gradient-to-r from-indigo-600 to-indigo-800 p-6 text-white">
+        <div class="flex items-center justify-center">
+          <div class="text-center">
+            <h1 class="text-2xl font-bold flex items-center justify-center">
+              <i class="fas fa-user-plus mr-3"></i> Create Account
+            </h1>
+            <p class="text-indigo-100 mt-1">Join our stress detection community</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Registration Form -->
+      <div class="p-6 sm:p-8">
+        {% if error %}
+        <div class="error-message mb-4 p-3 bg-red-100 border-l-4 border-red-500 text-red-700 rounded">
+          <div class="flex items-center">
+            <i class="fas fa-exclamation-circle mr-2"></i>
+            <p>{{ error }}</p>
+          </div>
+        </div>
+        {% endif %}
+        
+        <form method="POST">
+          {% csrf_token %}
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label for="first_name" class="block text-gray-700 text-sm font-medium mb-2">
+                <i class="fas fa-user mr-2 text-indigo-600"></i> First Name
+              </label>
+              <input type="text" id="first_name" name="first_name" required
+                     class="input-field w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                     placeholder="John">
+            </div>
+            
+            <div>
+              <label for="last_name" class="block text-gray-700 text-sm font-medium mb-2">
+                <i class="fas fa-user mr-2 text-indigo-600"></i> Last Name
+              </label>
+              <input type="text" id="last_name" name="last_name" required
+                     class="input-field w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                     placeholder="Doe">
+            </div>
+          </div>
+          
+          <div class="mb-4">
+            <label for="username" class="block text-gray-700 text-sm font-medium mb-2">
+              <i class="fas fa-at mr-2 text-indigo-600"></i> Username
+            </label>
+            <div class="relative">
+              <input type="text" id="username" name="username" required
+                     class="input-field w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                     placeholder="johndoe">
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <i class="fas fa-check-circle text-green-500 opacity-0" id="username-valid"></i>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mb-4">
+            <label for="email" class="block text-gray-700 text-sm font-medium mb-2">
+              <i class="fas fa-envelope mr-2 text-indigo-600"></i> Email
+            </label>
+            <div class="relative">
+              <input type="email" id="email" name="email" required
+                     class="input-field w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                     placeholder="john@example.com">
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <i class="fas fa-check-circle text-green-500 opacity-0" id="email-valid"></i>
+              </div>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label for="gender" class="block text-gray-700 text-sm font-medium mb-2">
+                <i class="fas fa-venus-mars mr-2 text-indigo-600"></i> Gender
+              </label>
+              <select id="gender" name="gender" required
+                      class="input-field w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            
+            <div>
+              <label for="mobile" class="block text-gray-700 text-sm font-medium mb-2">
+                <i class="fas fa-mobile-alt mr-2 text-indigo-600"></i> Mobile
+              </label>
+              <div class="relative">
+                <input type="tel" id="mobile" name="mobile" required pattern="[0-9]{10}"
+                       class="input-field w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                       placeholder="9876543210">
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <i class="fas fa-check-circle text-green-500 opacity-0" id="mobile-valid"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mb-4">
+            <label for="password" class="block text-gray-700 text-sm font-medium mb-2">
+              <i class="fas fa-lock mr-2 text-indigo-600"></i> Password
+            </label>
+            <div class="relative">
+              <input type="password" id="password" name="password" required
+                     class="input-field w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                     placeholder="••••••••">
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                <i class="fas fa-eye-slash text-gray-400 cursor-pointer" id="toggle-password"></i>
+              </div>
+            </div>
+            <div id="password-strength" class="password-strength w-full bg-gray-200"></div>
+            <p id="password-strength-text" class="text-xs mt-1 text-gray-500"></p>
+          </div>
+          
+          <div class="mb-6">
+            <label for="confirm_password" class="block text-gray-700 text-sm font-medium mb-2">
+              <i class="fas fa-lock mr-2 text-indigo-600"></i> Confirm Password
+            </label>
+            <div class="relative">
+              <input type="password" id="confirm_password" name="confirm_password" required
+                     class="input-field w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                     placeholder="••••••••">
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                <i class="fas fa-eye-slash text-gray-400 cursor-pointer" id="toggle-confirm-password"></i>
+              </div>
+            </div>
+            <div id="password-match" class="text-xs mt-1 text-red-500 hidden">
+              <i class="fas fa-times-circle mr-1"></i> Passwords do not match
+            </div>
+            <div id="password-match-success" class="text-xs mt-1 text-green-500 hidden">
+              <i class="fas fa-check-circle mr-1"></i> Passwords match
+            </div>
+          </div>
+          
+          <div class="mb-4">
+            <div class="flex items-start">
+              <div class="flex items-center h-5">
+                <input id="terms" name="terms" type="checkbox" required
+                       class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+              </div>
+              <div class="ml-3 text-sm">
+                <label for="terms" class="font-medium text-gray-700">
+                  I agree to the <a href="#" class="text-indigo-600 hover:underline">Terms and Conditions</a>
+                </label>
+              </div>
+            </div>
+          </div>
+          
+          <button type="submit" class="register-btn w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md flex items-center justify-center">
+            <i class="fas fa-user-plus mr-2"></i> Register
+          </button>
+          
+          <div class="mt-6 text-center">
+            <p class="text-gray-600 text-sm">
+              Already have an account? 
+              <a href="{% url 'login' %}" class="text-indigo-600 font-medium hover:underline">Login now</a>
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="md:flex md:items-center md:justify-between">
+        <div class="flex justify-center md:order-2 space-x-6">
+          <a href="#" class="text-gray-400 hover:text-white">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-white">
+            <i class="fab fa-linkedin-in"></i>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-white">
+            <i class="fab fa-github"></i>
+          </a>
+        </div>
+        <div class="mt-8 md:mt-0 md:order-1">
+          <p class="text-center text-base text-gray-400">
+            &copy; 2025 Stress Detection System. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Animation on scroll
+    const registerCard = document.querySelector('.register-card');
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, {
+      threshold: 0.1
+    });
+    
+    observer.observe(registerCard);
+    
+    // Mobile menu toggle (placeholder - would need actual implementation)
+    const mobileMenuButton = document.querySelector('.mobile-menu-button');
+    mobileMenuButton.addEventListener('click', () => {
+      alert('Mobile menu would open here in a full implementation');
+    });
+    
+    // Toggle password visibility
+    const togglePassword = document.querySelector('#toggle-password');
+    const password = document.querySelector('#password');
+    const toggleConfirmPassword = document.querySelector('#toggle-confirm-password');
+    const confirmPassword = document.querySelector('#confirm_password');
+    
+    togglePassword.addEventListener('click', function() {
+      const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+      password.setAttribute('type', type);
+      this.classList.toggle('fa-eye-slash');
+      this.classList.toggle('fa-eye');
+    });
+    
+    toggleConfirmPassword.addEventListener('click', function() {
+      const type = confirmPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+      confirmPassword.setAttribute('type', type);
+      this.classList.toggle('fa-eye-slash');
+      this.classList.toggle('fa-eye');
+    });
+    
+    // Validation indicators
+    const username = document.querySelector('#username');
+    const usernameValid = document.querySelector('#username-valid');
+    const email = document.querySelector('#email');
+    const emailValid = document.querySelector('#email-valid');
+    const mobile = document.querySelector('#mobile');
+    const mobileValid = document.querySelector('#mobile-valid');
+    
+    username.addEventListener('input', function() {
+      if (this.value.length > 0) {
+        usernameValid.classList.remove('opacity-0');
+      } else {
+        usernameValid.classList.add('opacity-0');
+      }
+    });
+    
+    email.addEventListener('input', function() {
+      if (this.value.length > 0 && this.value.includes('@') && this.value.includes('.')) {
+        emailValid.classList.remove('opacity-0');
+      } else {
+        emailValid.classList.add('opacity-0');
+      }
+    });
+    
+    mobile.addEventListener('input', function() {
+      if (this.value.length === 10 && /^\d+$/.test(this.value)) {
+        mobileValid.classList.remove('opacity-0');
+      } else {
+        mobileValid.classList.add('opacity-0');
+      }
+    });
+    
+    // Password strength indicator
+    password.addEventListener('input', function() {
+      const strengthBar = document.querySelector('#password-strength');
+      const strengthText = document.querySelector('#password-strength-text');
+      const strength = calculatePasswordStrength(this.value);
+      
+      if (this.value.length === 0) {
+        strengthBar.style.width = '0%';
+        strengthBar.style.backgroundColor = '';
+        strengthText.textContent = '';
+        return;
+      }
+      
+      strengthBar.style.width = strength.percentage + '%';
+      strengthBar.style.backgroundColor = strength.color;
+      strengthText.textContent = strength.text;
+      strengthText.style.color = strength.color;
+      
+      // Check password match
+      checkPasswordMatch();
+    });
+    
+    confirmPassword.addEventListener('input', checkPasswordMatch);
+    
+    function checkPasswordMatch() {
+      const passwordMatch = document.querySelector('#password-match');
+      const passwordMatchSuccess = document.querySelector('#password-match-success');
+      
+      if (password.value && confirmPassword.value) {
+        if (password.value === confirmPassword.value) {
+          passwordMatch.classList.add('hidden');
+          passwordMatchSuccess.classList.remove('hidden');
+        } else {
+          passwordMatch.classList.remove('hidden');
+          passwordMatchSuccess.classList.add('hidden');
+        }
+      } else {
+        passwordMatch.classList.add('hidden');
+        passwordMatchSuccess.classList.add('hidden');
+      }
+    }
+    
+    function calculatePasswordStrength(password) {
+      let strength = 0;
+      
+      // Length check
+      if (password.length > 7) strength++;
+      if (password.length > 11) strength++;
+      
+      // Character type checks
+      if (/[A-Z]/.test(password)) strength++; // Uppercase
+      if (/[a-z]/.test(password)) strength++; // Lowercase
+      if (/[0-9]/.test(password)) strength++; // Numbers
+      if (/[^A-Za-z0-9]/.test(password)) strength++; // Special chars
+      
+      // Determine strength level
+      if (strength <= 2) {
+        return { percentage: 33, color: '#ef4444', text: 'Weak' };
+      } else if (strength <= 4) {
+        return { percentage: 66, color: '#f59e0b', text: 'Medium' };
+      } else {
+        return { percentage: 100, color: '#10b981', text: 'Strong' };
+      }
+    }
+  </script>
+</body>
+</html>

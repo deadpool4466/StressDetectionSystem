@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile | Stress Detection System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+    }
+    
+    .profile-card {
+      transform: translateY(50px);
+      opacity: 0;
+      transition: all 0.6s ease-out;
+    }
+    
+    .profile-card.visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    .gradient-text {
+      background: linear-gradient(90deg, #4f46e5, #10b981);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .nav-link {
+      position: relative;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -5px;
+      left: 0;
+      background-color: #4f46e5;
+      transition: width 0.3s ease;
+    }
+    
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    
+    .profile-table tr {
+      transition: all 0.3s ease;
+    }
+    
+    .profile-table tr:hover {
+      background-color: rgba(79, 70, 229, 0.05);
+    }
+    
+    .profile-table th {
+      background: linear-gradient(90deg, #4f46e5, #6366f1);
+    }
+    
+    .edit-btn {
+      transition: all 0.3s ease;
+    }
+    
+    .edit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+  </style>
+</head>
+<body class="relative">
+  <!-- Navigation -->
+  <nav class="bg-gray-900 text-white shadow-lg fixed w-full z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        <div class="flex-shrink-0 flex items-center">
+          <i class="fas fa-heartbeat text-3xl mr-3 text-pink-400"></i>
+          <span class="text-2xl font-bold gradient-text">Stress<span class="text-white">Detection</span></span>
+        </div>
+        <div class="hidden md:block">
+          <div class="ml-10 flex items-baseline space-x-8">
+            <a href="{% url 'home' %}" class="nav-link px-3 py-2 text-sm font-medium hover:text-indigo-200">Home</a>
+            <a href="{% url 'profile' %}" class="nav-link px-3 py-2 text-sm font-medium hover:text-indigo-200">Profile</a>
+             <a href="{% url 'logout' %}" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+                    Logout <i class="fas fa-sign-out-alt ml-1"></i>
+             </a>
+          </div>
+        </div>
+        <div class="md:hidden">
+          <button class="mobile-menu-button p-2 rounded-md text-white hover:text-indigo-200 focus:outline-none">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Profile Content -->
+  <div class="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto profile-card bg-white rounded-xl shadow-xl overflow-hidden">
+      <!-- Profile Header -->
+      <div class="bg-gradient-to-r from-indigo-600 to-indigo-800 p-6 text-white">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-2xl font-bold flex items-center">
+              <i class="fas fa-user-circle mr-3"></i> User Profile
+            </h1>
+            <p class="text-indigo-100 mt-1">View and manage your account information</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Profile Content -->
+      <div class="p-6 sm:p-8">
+        <div class="overflow-x-auto">
+          <table class="w-full profile-table">
+            <thead>
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Field</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Information</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">First Name</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.first_name }}</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Last Name</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.last_name }}</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Username</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.username }}</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Email</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.email }}</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Gender</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ pr.gender }}</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Mobile</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ pr.mobile }}</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Last Login</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.last_login }}</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Date Joined</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.date_joined }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="md:flex md:items-center md:justify-between">
+        <div class="flex justify-center md:order-2 space-x-6">
+          <a href="#" class="text-gray-400 hover:text-white">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-white">
+            <i class="fab fa-linkedin-in"></i>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-white">
+            <i class="fab fa-github"></i>
+          </a>
+        </div>
+        <div class="mt-8 md:mt-0 md:order-1">
+          <p class="text-center text-base text-gray-400">
+            &copy; 2025 Stress Detection System. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Animation on scroll
+    const profileCard = document.querySelector('.profile-card');
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, {
+      threshold: 0.1
+    });
+    
+    observer.observe(profileCard);
+    
+    // Mobile menu toggle (placeholder - would need actual implementation)
+    const mobileMenuButton = document.querySelector('.mobile-menu-button');
+    mobileMenuButton.addEventListener('click', () => {
+      alert('Mobile menu would open here in a full implementation');
+    });
+    
+    // Edit profile button functionality
+    const editBtn = document.querySelector('.edit-btn');
+    editBtn.addEventListener('click', () => {
+      alert('Edit profile functionality would be implemented here');
+    });
+  </script>
+</body>
+</html>

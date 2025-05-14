@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stress Prediction | Stress Detection System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+    
+    .form-container {
+      transform: translateY(50px);
+      opacity: 0;
+      transition: all 0.6s ease-out;
+    }
+    
+    .form-container.visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    .input-field {
+      transition: all 0.3s ease;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    }
+    
+    .input-field:focus {
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+    }
+    
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+    
+    .nav-link {
+      position: relative;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -5px;
+      left: 0;
+      background-color: #4f46e5;
+      transition: width 0.3s ease;
+    }
+    
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    
+    .gradient-text {
+      background: linear-gradient(90deg, #4f46e5, #10b981);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+  </style>
+</head>
+<body class="relative">
+  <!-- Navigation -->
+  <nav class="bg-gray-900 text-white shadow-lg fixed w-full z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        <div class="flex-shrink-0 flex items-center">
+          <i class="fas fa-heartbeat text-3xl mr-3 text-pink-400"></i>
+          <span class="text-2xl font-bold gradient-text">Stress<span class="text-white">Detection</span></span>
+        </div>
+         <div class="hidden md:block">
+          <div class="ml-10 flex items-baseline space-x-8">
+            <a href="{% url 'home' %}" class="nav-link px-3 py-2 text-sm font-medium hover:text-indigo-200">Home</a>
+            <a href="{% url 'profile' %}" class="nav-link px-3 py-2 text-sm font-medium hover:text-indigo-200">Profile</a>
+             <a href="{% url 'logout' %}" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+                    Logout <i class="fas fa-sign-out-alt ml-1"></i>
+             </a>
+          </div>
+        </div>
+        <div class="md:hidden">
+          <button class="mobile-menu-button p-2 rounded-md text-white hover:text-indigo-200 focus:outline-none">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Form Container -->
+  <div class="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-2xl mx-auto form-container bg-white rounded-xl shadow-2xl overflow-hidden">
+      <div class="bg-gradient-to-r from-indigo-600 to-indigo-800 p-6 text-white">
+        <h2 class="text-2xl font-bold flex items-center">
+          <i class="fas fa-chart-line mr-3"></i> Predict Your Stress Level
+        </h2>
+        <p class="text-indigo-100 mt-1">Fill in your biometric data for accurate stress analysis</p>
+      </div>
+      
+      <div class="p-6 sm:p-8">
+        {% if error %}
+          <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <i class="fas fa-exclamation-circle text-red-500"></i>
+              </div>
+              <div class="ml-3">
+                <p class="text-sm text-red-700">{{ error }}</p>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+        
+        <form method="POST" class="space-y-5">
+          {% csrf_token %}
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Column 1 -->
+            <div>
+              <div class="mb-5">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Age</label>
+                <input type="number" name="Age" placeholder="Enter your age" 
+                       class="input-field w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" 
+                       step="0.01" inputmode="decimal" required>
+              </div>
+              
+              <div class="mb-5">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Heart Rate (bpm)</label>
+                <input type="number" name="Heart_Rate" placeholder="Enter your heart rate" 
+                       class="input-field w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" 
+                       step="0.01" inputmode="decimal" required>
+              </div>
+              
+              <div class="mb-5">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Exercise Hours/Week</label>
+                <input type="number" name="Exercise_Hours_Per_Week" placeholder="Enter exercise hours" 
+                       class="input-field w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" 
+                       step="0.01" inputmode="decimal" required>
+              </div>
+              
+              <div class="mb-5">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Current Stress Level (1-10)</label>
+                <input type="number" name="Stress_Level" placeholder="Enter your perceived stress level" 
+                       class="input-field w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" 
+                       min="1" max="10" step="0.1" inputmode="decimal" required>
+              </div>
+              
+              <div class="mb-5">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Sedentary Hours/Day</label>
+                <input type="number" name="Sedentary_Hours_Per_Day" placeholder="Enter sedentary hours" 
+                       class="input-field w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" 
+                       step="0.01" inputmode="decimal" required>
+              </div>
+            </div>
+            
+            <!-- Column 2 -->
+            <div>
+              <div class="mb-5">
+                <label class="block text-sm font-medium text-gray-700 mb-1">BMI</label>
+                <input type="number" name="BMI" placeholder="Enter your BMI" 
+                       class="input-field w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" 
+                       step="0.01" inputmode="decimal" required>
+              </div>
+              
+              <div class="mb-5">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Sleep Hours/Day</label>
+                <input type="number" name="Sleep_Hours_Per_Day" placeholder="Enter sleep hours" 
+                       class="input-field w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" 
+                       step="0.01" inputmode="decimal" required>
+              </div>
+              
+              <div class="mb-5">
+                <label class="block text-sm font-medium text-gray-700 mb-1">HRV (ms)</label>
+                <input type="number" name="HRV" placeholder="Enter Heart Rate Variability" 
+                       class="input-field w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" 
+                       step="0.01" inputmode="decimal" required>
+              </div>
+              
+              <div class="mb-5">
+                <label class="block text-sm font-medium text-gray-700 mb-1">EDA (μS)</label>
+                <input type="number" name="EDA" placeholder="Enter Electrodermal Activity" 
+                       class="input-field w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" 
+                       step="0.01" inputmode="decimal" required>
+              </div>
+              
+              <div class="mb-5">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Skin Temp (°C)</label>
+                <input type="number" name="Skin_Temperature" placeholder="Enter skin temperature" 
+                       class="input-field w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" 
+                       step="0.01" inputmode="decimal" required>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Full width fields -->
+          <div class="mb-5">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Respiration Rate (breaths/min)</label>
+            <input type="number" name="Respiration_Rate" placeholder="Enter respiration rate" 
+                   class="input-field w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" 
+                   step="0.01" inputmode="decimal" required>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="mb-5">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+              <select name="Gender" class="input-field w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" required>
+                <option value="">Select gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+            
+            <div class="mb-5">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Diet</label>
+              <select name="Diet" class="input-field w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" required>
+                <option value="">Select diet type</option>
+                <option value="Healthy">Healthy</option>
+                <option value="Unhealthy">Unhealthy</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="pt-4">
+            <button type="submit" class="w-full flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-gradient-to-r from-indigo-600 to-indigo-800 hover:from-indigo-700 hover:to-indigo-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 pulse">
+              <i class="fas fa-brain mr-2"></i> Predict Stress Level
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="md:flex md:items-center md:justify-between">
+        <div class="flex justify-center md:order-2 space-x-6">
+          <a href="#" class="text-gray-400 hover:text-white">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-white">
+            <i class="fab fa-linkedin-in"></i>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-white">
+            <i class="fab fa-github"></i>
+          </a>
+        </div>
+        <div class="mt-8 md:mt-0 md:order-1">
+          <p class="text-center text-base text-gray-400">
+            &copy; 2025 Stress Detection System. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Animation on scroll
+    const formContainer = document.querySelector('.form-container');
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, {
+      threshold: 0.1
+    });
+    
+    observer.observe(formContainer);
+    
+    // Mobile menu toggle (placeholder - would need actual implementation)
+    const mobileMenuButton = document.querySelector('.mobile-menu-button');
+    mobileMenuButton.addEventListener('click', () => {
+      alert('Mobile menu would open here in a full implementation');
+    });
+    
+    // Add focus styles to inputs when they're focused
+    const inputs = document.querySelectorAll('input, select');
+    inputs.forEach(input => {
+      input.addEventListener('focus', () => {
+        input.parentElement.classList.add('ring-2', 'ring-indigo-200');
+      });
+      input.addEventListener('blur', () => {
+        input.parentElement.classList.remove('ring-2', 'ring-indigo-200');
+      });
+    });
+  </script>
+</body>
+</html>
