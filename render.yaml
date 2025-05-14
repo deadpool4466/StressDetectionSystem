@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: StressDetectionSystem
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn stress.wsgi
+    envVars:
+      - key: DISABLE_COLLECTSTATIC
+        value: 1
+    postDeploy:
+      - python manage.py migrate
